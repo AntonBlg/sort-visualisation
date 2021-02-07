@@ -1,7 +1,12 @@
-const ITEMS_COUNT = 20;
+const ITEMS_COUNT = 10;
 const ELEMENT_WIDTH = 35;
 const ANIMATION_DURATION = 50; // ms
 const VALUE_RANGE = [100, 600];
+
+const COLORS = {
+  oddItem: '#cce',
+  evenItem: '#ccb7ee'
+};
 
 const items = [];
 let itemsI, itemsJ, iterationsCount, iterationStep, iterationsProgress;
@@ -17,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   itemsWrapper = document.querySelector('.items');
 
   initItems();
-  updateItemsPos();
+  updateItems();
   addItemToPage();
 
   if (buttonSort) {
@@ -73,7 +78,7 @@ function sortStep() {
     items[itemsI] = items[itemsI + 1];
     items[itemsI + 1] = temp;
 
-    updateItemsPos();
+    updateItems();
   }
 
   itemsI ++;
@@ -112,17 +117,16 @@ function finishSort() {
   setHintText('Сортировка завершена');
 
   itemsWrapper.classList.add('pulse');
-  buttonSort.classList.add('pulse');
 
   setTimeout(() => {
     itemsWrapper.classList.remove('pulse');
-    buttonSort.classList.remove('pulse');
   }, 5000);
 }
 
-function updateItemsPos() {
+function updateItems() {
   items.forEach((item, index) => {
     item.element.style.transform = `translateX( ${index * ELEMENT_WIDTH}px )`;
+    item.element.style.backgroundColor = (index % 2 === 0 ? COLORS.evenItem : COLORS.oddItem);
   });
 }
 
