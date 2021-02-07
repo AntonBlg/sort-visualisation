@@ -1,10 +1,10 @@
-const ITEMS_COUNT = 10;
+const ITEMS_COUNT = 20;
 const ELEMENT_WIDTH = 35;
-const ANIMATION_DURATION = 200; // ms
+const ANIMATION_DURATION = 50; // ms
 const VALUE_RANGE = [100, 600];
 
 const items = [];
-let itemsI, itemsJ;
+let itemsI, itemsJ, iterationsCount, iterationStep, iterationsProgress;
 let hintElement, buttonSort, itemsWrapper;
 
 const buttonEventHandler = () => {
@@ -26,6 +26,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initItems() {
+  iterationsProgress = 0;
+  iterationsCount = Math.pow(ITEMS_COUNT - 1, 2);
+  iterationStep = 1 / iterationsCount * 100;
+
   for (let i = 0; i < ITEMS_COUNT; i ++) {
     items.push({
       value: randomFromRange(VALUE_RANGE)
@@ -61,6 +65,9 @@ function itemsSort() {
 }
 
 function sortStep() {
+  iterationsProgress += iterationStep;
+  setHintText(`Процесс сортировки... (${Math.round(iterationsProgress)}%)`);
+
   if (items[itemsI].value > items[itemsI + 1].value) {
     const temp = items[itemsI];
     items[itemsI] = items[itemsI + 1];
@@ -97,7 +104,6 @@ function startSort() {
   buttonSort.setAttribute('disabled', 'disabled');
   buttonSort.removeEventListener('click', buttonEventHandler);
 
-  setHintText('Процесс сортировки...');
   itemsSort();
 }
 
