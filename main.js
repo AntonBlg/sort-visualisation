@@ -12,132 +12,165 @@ const items = [];
 let itemsI, itemsJ, iterationsCount, iterationStep, iterationsProgress;
 let hintElement, buttonSort, itemsWrapper;
 
+class CustomSort {
+
+  static BubbleSort(array, swapCallback) {
+    for (let i = 0; i < array.length - 1; i++) {
+      for (let j = 0; j < array.length - 1; j++) {
+        if (array[j] > array[j + 1]) {
+          this.#swap(array, j, j + 1, swapCallback);
+        }
+      }
+    }
+  }
+
+  static #swap(array, i, j, swapCallback) {
+    let temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+
+    this.#swapCallback(i, j, swapCallback);
+  }
+
+  static #swapCallback(i, j, swapCallback) {
+    console.log(typeof swapCallback);
+    if (swapCallback && typeof swapCallback === 'function') {
+      swapCallback(i, j);
+    }
+  }
+}
+
 const buttonEventHandler = () => {
   startSort();
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-  hintElement = document.querySelector('.hint-text');
-  buttonSort = document.querySelector('.start-sort');
-  itemsWrapper = document.querySelector('.items');
-
-  initItems();
-  updateItems();
-  addItemToPage();
-
-  if (buttonSort) {
-    buttonSort.addEventListener('click', buttonEventHandler);
-  }
+window.mysort = CustomSort.BubbleSort([4, 6, 1, 2, 3], () => {
+  console.log('Свап');
 });
 
-function initItems() {
-  iterationsProgress = 0;
-  iterationsCount = Math.pow(ITEMS_COUNT - 1, 2);
-  iterationStep = 1 / iterationsCount * 100;
 
-  for (let i = 0; i < ITEMS_COUNT; i ++) {
-    items.push({
-      value: randomFromRange(VALUE_RANGE)
-    });
-  }
+// document.addEventListener('DOMContentLoaded', () => {
+//   hintElement = document.querySelector('.hint-text');
+//   buttonSort = document.querySelector('.start-sort');
+//   itemsWrapper = document.querySelector('.items');
 
-  items.forEach((item, index) => {
-    item.element = createItemElement(item.value);
-  });
-}
+//   initItems();
+//   updateItems();
+//   addItemToPage();
 
-function addItemToPage() {
-  if (itemsWrapper) {
-    items.forEach(item => {
-      itemsWrapper.appendChild(item.element);
-    });
-  }
-}
+//   if (buttonSort) {
+//     buttonSort.addEventListener('click', buttonEventHandler);
+//   }
+// });
 
-function createItemElement(value) {
-  const element = document.createElement('div');
-  element.classList.add('item');
-  element.style.height = value + 'px';
-  element.innerText = value.toString();
+// function initItems() {
+//   iterationsProgress = 0;
+//   iterationsCount = Math.pow(ITEMS_COUNT - 1, 2);
+//   iterationStep = 1 / iterationsCount * 100;
 
-  return element;
-}
+//   for (let i = 0; i < ITEMS_COUNT; i++) {
+//     items.push({
+//       value: randomFromRange(VALUE_RANGE)
+//     });
+//   }
 
-function itemsSort() {
-  itemsI = itemsJ = 0;
+//   items.forEach((item, index) => {
+//     item.element = createItemElement(item.value);
+//   });
+// }
 
-  setTimeout(sortStep, ANIMATION_DURATION);
-}
+// function addItemToPage() {
+//   if (itemsWrapper) {
+//     items.forEach(item => {
+//       itemsWrapper.appendChild(item.element);
+//     });
+//   }
+// }
 
-function sortStep() {
-  iterationsProgress += iterationStep;
-  setHintText(`Процесс сортировки... (${Math.round(iterationsProgress)}%)`);
+// function createItemElement(value) {
+//   const element = document.createElement('div');
+//   element.classList.add('item');
+//   element.style.height = value + 'px';
+//   element.innerText = value.toString();
 
-  if (items[itemsI].value > items[itemsI + 1].value) {
-    const temp = items[itemsI];
-    items[itemsI] = items[itemsI + 1];
-    items[itemsI + 1] = temp;
+//   return element;
+// }
 
-    updateItems();
-  }
+// function itemsSort() {
+//   itemsI = itemsJ = 0;
 
-  itemsI ++;
+//   setTimeout(sortStep, ANIMATION_DURATION);
+// }
 
-  if (itemsI < items.length - 1) {
-    setTimeout(sortStep, ANIMATION_DURATION);
-  }
-  else {
-    itemsJ ++;
-    itemsI = 0;
+// function sortStep() {
+//   iterationsProgress += iterationStep;
+//   setHintText(`Процесс сортировки... (${Math.round(iterationsProgress)}%)`);
 
-    if (itemsJ < items.length - 1) {
-      setTimeout(sortStep, ANIMATION_DURATION);
-    }
-    else {
-      finishSort();
-    }
-  }
-}
+//   if (items[itemsI].value > items[itemsI + 1].value) {
+//     const temp = items[itemsI];
+//     items[itemsI] = items[itemsI + 1];
+//     items[itemsI + 1] = temp;
 
-function setHintText(text) {
-  if (hintElement) {
-    hintElement.innerText = text;
-  }
-}
+//     updateItems();
+//   }
 
-function startSort() {
-  buttonSort.setAttribute('disabled', 'disabled');
-  buttonSort.removeEventListener('click', buttonEventHandler);
+//   itemsI++;
 
-  itemsSort();
-}
+//   if (itemsI < items.length - 1) {
+//     setTimeout(sortStep, ANIMATION_DURATION);
+//   }
+//   else {
+//     itemsJ++;
+//     itemsI = 0;
 
-function finishSort() {
-  buttonSort.removeAttribute('disabled');
-  setHintText('Сортировка завершена');
+//     if (itemsJ < items.length - 1) {
+//       setTimeout(sortStep, ANIMATION_DURATION);
+//     }
+//     else {
+//       finishSort();
+//     }
+//   }
+// }
 
-  itemsWrapper.classList.add('pulse');
+// function setHintText(text) {
+//   if (hintElement) {
+//     hintElement.innerText = text;
+//   }
+// }
 
-  setTimeout(() => {
-    itemsWrapper.classList.remove('pulse');
-  }, 5000);
-}
+// function startSort() {
+//   buttonSort.setAttribute('disabled', 'disabled');
+//   buttonSort.removeEventListener('click', buttonEventHandler);
 
-function updateItems() {
-  items.forEach((item, index) => {
-    item.element.style.transform = `translateX( ${index * ELEMENT_WIDTH}px )`;
-    item.element.style.backgroundColor = (index % 2 === 0 ? COLORS.evenItem : COLORS.oddItem);
-  });
-}
+//   itemsSort();
+// }
 
-/* на learn.javascript.ru реализация функции грамотнее,
-*  но я оставлю такую, до которой дошёл сам
-*  */
-function randomFromRange(range) {
-  const [min, max] = range;
+// function finishSort() {
+//   buttonSort.removeAttribute('disabled');
+//   setHintText('Сортировка завершена');
 
-  const random = Math.random();
-  const step = 1 / (max - min);
+//   itemsWrapper.classList.add('pulse');
 
-  return Math.round(random / step) + min;
-}
+//   setTimeout(() => {
+//     itemsWrapper.classList.remove('pulse');
+//   }, 5000);
+// }
+
+// function updateItems() {
+//   items.forEach((item, index) => {
+//     item.element.style.transform = `translateX( ${index * ELEMENT_WIDTH}px )`;
+//     item.element.style.backgroundColor = (index % 2 === 0 ? COLORS.evenItem : COLORS.oddItem);
+//   });
+// }
+
+// /* на learn.javascript.ru реализация функции грамотнее,
+// *  но я оставлю такую, до которой дошёл сам
+// *  */
+// function randomFromRange(range) {
+//   const [min, max] = range;
+
+//   const random = Math.random();
+//   const step = 1 / (max - min);
+
+//   return Math.round(random / step) + min;
+// }
